@@ -1,14 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-
-const secret = process.env.JWT_SECRET as string;
-
-interface AuthRequest extends Request {
-  user?: any;
-}
+import { TypeUserToken } from '../@types/userType';
 
 export const authenticateJWT = (
-  req: AuthRequest,
+  req: Request & { user?: TypeUserToken },
   res: Response,
   next: NextFunction,
 ) => {
@@ -23,12 +18,13 @@ export const authenticateJWT = (
       .status(500)
       .json({ msg: 'Variável de ambiente Secret não definida' });
   }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decoded) {
+    return res.status(401).json({ msg: 'Token Inválido' });
+  }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ msg: 'Token Inválido', error: err });
-    }
-    req.user = decoded;
-    next();
-  });
+  console.log(decoded);
+
+  req.user = decoded as TypeUserToken;
+  next();
 };
