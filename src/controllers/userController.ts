@@ -62,8 +62,8 @@ export const singIn = async (req: Request, res: Response) => {
     // Gerando o token JWT
     const token = jwt.sign(
       {
-        userId: user._id,
-        userName: user.email,
+        userName: user.username,
+        email: user.email,
         role: user.role,
       },
       process.env.JWT_SECRET,
