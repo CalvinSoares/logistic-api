@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema } from 'mongoose';
 
 export interface IOrder extends Document {
   orderId?: string;
@@ -26,4 +26,4 @@ const orderSchema = new Schema<IOrder>({
   email: { type: String, required: true },
 });
 
-export const Order = model<IOrder>("Order", orderSchema);
+export const Order = model<IOrder>('Order', orderSchema);

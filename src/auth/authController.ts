@@ -83,17 +83,6 @@ class AuthController {
       res.status(500).json({ msg: 'Erro interno do servidor', err: error });
     }
   }
-
-  //   async dataToken(req: Request & { userData?: any }, res: Response) {
-  //     if (!req.userData?.role) {
-  //       return res.status(422).json({ msg: 'Role is undefined' });
-  //     }
-  //     const data = await getRoleById(req.userData?.role);
-  //     if (!data) {
-  //       return res.status(404).json({ msg: 'Role not found' });
-  //     }
-  //     return res.status(200).json({ dataToken: req.userData, role: data });
-  //   }
 }
 
 export default new AuthController();
