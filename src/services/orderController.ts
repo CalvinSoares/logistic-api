@@ -1,4 +1,4 @@
-import { IOrder, Order } from "../models/orderModel";
+import { IOrder, Order } from '../models/orderModel';
 
 export const getAllOrders = async (): Promise<IOrder[]> => {
   return Order.find();
@@ -15,7 +15,7 @@ export const createNewOrder = async (orderData: IOrder): Promise<IOrder> => {
 
 export const updateOrderById = async (
   id: string,
-  orderData: Partial<IOrder>
+  orderData: Partial<IOrder>,
 ): Promise<IOrder | null> => {
   return Order.findByIdAndUpdate(id, orderData, { new: true });
 };
