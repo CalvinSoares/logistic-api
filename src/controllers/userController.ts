@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { TypeRequestUser, TypeUser } from '../@types/userType';
 import { transformToUserDTO } from '../utils/transformToUserDTO';
+import { UserDTO } from '../dto/userDto';
 dotenv.config();
 
 class UserController {
@@ -42,6 +43,26 @@ class UserController {
     } catch (err) {
       res.status(500).json({
         message: 'Error Delete failed',
+        error: (err as Error).message,
+      });
+    }
+  }
+
+  async FindOneById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      const userFind = (await User.findOne(
+        { _id: id },
+        { lean: true },
+      )) as TypeUser | null;
+
+      const userDTO = transformToUserDTO(userFind);
+
+      res.status(200).json(userDTO);
+    } catch (err) {
+      res.status(500).json({
+        message: 'Error Update user failed',
         error: (err as Error).message,
       });
     }

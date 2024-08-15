@@ -8,11 +8,19 @@ const userRouter = Router();
 
 userRouter.post('/signUp', authController.signUp);
 userRouter.post('/signIn', authController.signIn);
+
 userRouter.get(
   '/users',
   authenticateJWT,
   authorizeRole(['admin']),
   userController.GetAll,
+);
+
+userRouter.get(
+  '/users/:id',
+  authenticateJWT,
+  authorizeRole(['admin']),
+  userController.DeleteOne,
 );
 
 userRouter.delete(
