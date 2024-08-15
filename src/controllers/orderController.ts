@@ -1,26 +1,51 @@
 import { Request, Response } from 'express';
 import { Order } from '../models/orderModel';
 
-export const getOrders = async (req: Request, res: Response) => {
-  try {
-    const orders = await Order.find();
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: 'Erro ao buscar pedidos', error: err });
-  }
-};
-
-export const getOrderById = async (req: Request, res: Response) => {
-  try {
-    const order = await Order.findById(req.params.id);
-    if (!order) {
-      return res.status(404).json({ message: 'Pedido não encontrado' });
+class OrderController {
+  async getOrders(req: Request, res: Response) {
+    try {
+      const orders = await Order.find();
+      res.json(orders);
+    } catch (err) {
+      res.status(500).json({ message: 'Error get all order', error: err });
     }
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ message: 'Erro ao buscar pedido', error: err });
   }
-};
+
+  async getOrderById(req: Request, res: Response) {
+    try {
+      const order = await Order.findById(req.params.id);
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+      res.json(order);
+    } catch (err) {
+      res.status(500).json({ message: 'Error search order', error: err });
+    }
+  }
+}
+
+export default new OrderController();
+
+// export const getOrders = async (req: Request, res: Response) => {
+//   try {
+//     const orders = await Order.find();
+//     res.json(orders);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Erro ao buscar pedidos', error: err });
+//   }
+// };
+
+// export const getOrderById = async (req: Request, res: Response) => {
+//   try {
+//     const order = await Order.findById(req.params.id);
+//     if (!order) {
+//       return res.status(404).json({ message: 'Pedido não encontrado' });
+//     }
+//     res.json(order);
+//   } catch (err) {
+//     res.status(500).json({ message: 'Erro ao buscar pedido', error: err });
+//   }
+// };
 
 export const createOrder = async (req: Request, res: Response) => {
   const {

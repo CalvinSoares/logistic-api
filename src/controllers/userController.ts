@@ -51,11 +51,14 @@ class UserController {
   async FindOneById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-
       const userFind = (await User.findOne(
         { _id: id },
         { lean: true },
       )) as TypeUser | null;
+
+      if (!userFind) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
       const userDTO = transformToUserDTO(userFind);
 
