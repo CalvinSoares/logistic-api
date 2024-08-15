@@ -25,6 +25,30 @@ class UserController {
     }
   }
 
+  async FindOneByEmail(req: Request, res: Response) {
+    try {
+      const { email } = req.params;
+      const userFind = (await User.findOne(
+        { email: email },
+        {},
+        { lean: true },
+      )) as TypeUser | null;
+
+      if (!userFind) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const userDTO = transformToUserDTO(userFind);
+
+      res.status(200).json(userDTO);
+    } catch (err) {
+      res.status(500).json({
+        message: 'Error Update user failed',
+        error: (err as Error).message,
+      });
+    }
+  }
+
   async DeleteOne(req: Request, res: Response) {
     try {
       const { id } = req.params;

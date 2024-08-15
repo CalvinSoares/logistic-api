@@ -22,6 +22,12 @@ userRouter.get(
   authorizeRole(['admin']),
   userController.FindOneById,
 );
+userRouter.get(
+  '/users/email/:email',
+  authenticateJWT,
+  authorizeRole(['admin']),
+  userController.FindOneByEmail,
+);
 
 userRouter.delete(
   '/users/:id',
