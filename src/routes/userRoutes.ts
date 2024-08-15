@@ -15,6 +15,13 @@ userRouter.get(
   userController.GetAll,
 );
 
+userRouter.patch(
+  '/users/:id',
+  authenticateJWT,
+  authorizeRole(['admin']),
+  userController.UpdateUser,
+);
+
 userRouter.get(
   '/admin',
   authenticateJWT,

@@ -7,4 +7,11 @@ export type TypeUserToken = {
   role: string;
 };
 
+export type TypeUser = {
+  _id: string;
+  username: string;
+  email: string;
+  role: 'admin' | 'driver' | 'customer';
+};
+
 export type TypeRequestUser = Request & { user: TypeUserToken };
