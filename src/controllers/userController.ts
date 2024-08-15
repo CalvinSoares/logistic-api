@@ -28,16 +28,16 @@ class UserController {
   async DeleteOne(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const userDelete = (await User.findOneAndDelete(
+      const userDeleted = (await User.findOneAndDelete(
         { _id: id },
         { new: true, lean: true },
       )) as TypeUser | null;
 
-      if (!userDelete) {
+      if (!userDeleted) {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      const userDTO = transformToUserDTO(userDelete);
+      const userDTO = transformToUserDTO(userDeleted);
 
       res.status(200).json(userDTO);
     } catch (err) {
@@ -56,8 +56,6 @@ class UserController {
         {},
         { lean: true },
       )) as TypeUser | null;
-
-      console.log(userFind);
 
       if (!userFind) {
         return res.status(404).json({ message: 'User not found' });
