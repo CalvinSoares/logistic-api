@@ -53,8 +53,11 @@ class UserController {
       const { id } = req.params;
       const userFind = (await User.findOne(
         { _id: id },
+        {},
         { lean: true },
       )) as TypeUser | null;
+
+      console.log(userFind);
 
       if (!userFind) {
         return res.status(404).json({ message: 'User not found' });
