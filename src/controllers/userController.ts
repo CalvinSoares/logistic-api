@@ -24,7 +24,28 @@ class UserController {
     }
   }
 
-  async FindOne(req: Request, res: Response) {}
+  async DeleteOne(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const userDelete = (await User.findOneAndDelete(
+        { _id: id },
+        { new: true, lean: true },
+      )) as TypeUser | null;
+
+      if (!userDelete) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const userDTO = transformToUserDTO(userDelete);
+
+      res.status(200).json(userDTO);
+    } catch (err) {
+      res.status(500).json({
+        message: 'Error Delete failed',
+        error: (err as Error).message,
+      });
+    }
+  }
 
   async UpdateUser(req: Request, res: Response) {
     try {
@@ -34,18 +55,22 @@ class UserController {
       const userUpdate = (await User.findOneAndUpdate(
         { _id: id },
         { $set: body },
-        { new: true, lean: true, fields: { password: 0 } },
+        { new: true, lean: true },
       )) as TypeUser | null;
 
       if (!userUpdate) {
         return res.status(404).json({ message: 'Usuário não encontrado' });
       }
-      console.log(userUpdate);
 
       const userDTO = transformToUserDTO(userUpdate);
 
       res.status(200).json(userDTO);
-    } catch (error) {}
+    } catch (err) {
+      res.status(500).json({
+        message: 'Error Update user failed',
+        error: (err as Error).message,
+      });
+    }
   }
 }
 

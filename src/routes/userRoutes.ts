@@ -15,6 +15,13 @@ userRouter.get(
   userController.GetAll,
 );
 
+userRouter.delete(
+  '/users/:id',
+  authenticateJWT,
+  authorizeRole(['admin']),
+  userController.DeleteOne,
+);
+
 userRouter.patch(
   '/users/:id',
   authenticateJWT,
