@@ -20,7 +20,7 @@ userRouter.get(
   '/users/:id',
   authenticateJWT,
   authorizeRole(['admin']),
-  userController.DeleteOne,
+  userController.FindOneById,
 );
 
 userRouter.delete(
