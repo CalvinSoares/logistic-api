@@ -5,62 +5,46 @@ import jwt from 'jsonwebtoken';
 
 class AuthController {
   async signUp(req: Request, res: Response) {
-    const { userName, password, role } = req.body;
+    const { username, email, password, role } = req.body;
     try {
-      await User.findOne({ userName: userName }).then((response: any) => {
-        if (response) {
-          return res.status(409).json({ error: 'O usuário já existe' });
-        } else {
-          bcrypt.hash(
-            password,
-            10,
-            async (err: Error | undefined, hash: string) => {
-              const usuario = {
-                userName,
-                password: hash,
-                role,
-              };
-              await User.create(usuario).then((response) => {
-                if (!response) {
-                  return res
-                    .status(400)
-                    .json({ msg: 'Erro ao registrar  Usuario' });
-                } else {
-                  res
-                    .status(201)
-                    .json({ msg: 'Usuário registrado com sucesso' });
-                }
-              });
-            },
-          );
-        }
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(409).json({ error: 'O usuário já existe' });
+      }
+      const hash = await bcrypt.hash(password, 10);
+      const usuario = await User.create({
+        username,
+        email,
+        password: hash,
+        role,
       });
-    } catch (error) {
-      return res
-        .status(400)
-        .json({ msg: 'Erro ao cadastrar Usuario', err: error });
+
+      res.status(201).json({ message: 'User created successfully' });
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: 'Erro ao registrar usuário', error: err });
     }
   }
 
-  async signIn(req: Request & { userData?: any }, res: Response) {
-    const { userName, password } = req.body;
-    console.log(req.body);
+  async signIn(req: Request, res: Response) {
+    const { email, password } = req.body;
     try {
-      const response: any | null = await User.findOne({
-        userName: userName,
-      });
+      const user = await User.findOne({ email });
 
-      if (!response) {
-        return res.status(401).json({ error: 'Credenciais inválidas' });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
       }
 
-      const isPasswordValid = await bcrypt.compare(password, response.password);
+      console.log(await bcrypt.compare(password, user.password));
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(401).json({ msg: 'Credenciais inválidas' });
+        return res.status(401).json({ msg: 'Invalid credentials' });
       }
 
-      if (process.env.SECRET === undefined) {
+      if (process.env.JWT_SECRET === undefined) {
         return res
           .status(500)
           .json({ msg: 'Variável de ambiente Secret não definida' });
@@ -68,19 +52,16 @@ class AuthController {
 
       const token = jwt.sign(
         {
-          userId: response._id,
-          userName: response.userName,
-          role: response.role,
+          userName: user.username,
+          email: user.email,
+          role: user.role,
         },
-        process.env.SECRET,
+        process.env.JWT_SECRET,
       );
 
-      return res.status(201).json({
-        user: response.userName,
-        token: token,
-      });
-    } catch (error) {
-      res.status(500).json({ msg: 'Erro interno do servidor', err: error });
+      res.status(200).json({ token });
+    } catch (err) {
+      res.status(500).json({ message: 'Erro ao fazer login', error: err });
     }
   }
 }

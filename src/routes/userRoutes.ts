@@ -1,15 +1,20 @@
 import { Router } from 'express';
-import { signUp, singIn } from '../controllers/userController';
 import { authenticateJWT } from '../middlewares/authMiddleware';
 import { authorizeRole } from '../auth/authorizeRole';
+import authController from '../auth/authController';
+import userController from '../controllers/userController';
 
 const userRouter = Router();
 
-userRouter.post('/signUp', signUp);
-userRouter.post('/signIn', singIn);
-// userRouter.post('/login', login);
+userRouter.post('/signUp', authController.signUp);
+userRouter.post('/signIn', authController.signIn);
+userRouter.get(
+  '/users',
+  authenticateJWT,
+  authorizeRole(['admin']),
+  userController.GetAll,
+);
 
-// Rotas protegidas (exemplo de rota para admin)
 userRouter.get(
   '/admin',
   authenticateJWT,

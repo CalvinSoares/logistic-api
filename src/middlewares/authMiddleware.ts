@@ -8,9 +8,11 @@ export const authenticateJWT = (
   next: NextFunction,
 ) => {
   const headerToken = req.headers.authorization;
+  console.log('entou aqui');
   if (!headerToken) {
     return res.status(401).send({ error: 'Token não informado' });
   }
+  console.log('entou aqui2');
   const [typeToken, token] = headerToken.split(' ');
 
   if (process.env.JWT_SECRET === undefined) {
