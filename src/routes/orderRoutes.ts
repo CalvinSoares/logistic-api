@@ -1,22 +1,21 @@
-import { Router } from "express";
-import {
-  getOrderById,
-  createOrder,
-  updateOrder,
-  deleteOrder,
-  getOrders,
-} from "../controllers/orderController";
-import { getAllOrders } from "../services/orderController";
+import { Router } from 'express';
+import { getAllOrders } from '../services/orderController';
+
+import orderController from '../controllers/orderController';
 
 const orderRouter = Router();
+//esta ok
+orderRouter.get('/orders', orderController.getOrders);
+//esta ok
+orderRouter.get('/orders/:id', orderController.getOrderById);
+//esta ok
+orderRouter.post('/orders', orderController.createOrder);
+//esta ok
+orderRouter.patch('/orders/:id', orderController.updateOrder);
 
-orderRouter.get("/admin/orders/all", getOrders);
-orderRouter.get("/orders/:id", getOrderById);
-orderRouter.post("/admin/orders", createOrder);
-orderRouter.put("/admin/orders/:id", updateOrder);
-orderRouter.delete("/admin/orders/:id", deleteOrder);
+orderRouter.delete('/orders/:id', orderController.deleteOrder);
 
-orderRouter.get("/driver/orders", getAllOrders);
-orderRouter.put("/driver/orders/:id/status", updateOrder);
+// orderRouter.get('/driver/orders', getAllOrders);
+// orderRouter.put('/driver/orders/:id/status', orderController.updateOrder);
 
 export default orderRouter;

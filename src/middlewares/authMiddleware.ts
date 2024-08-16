@@ -1,34 +1,32 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-
-const secret = process.env.JWT_SECRET as string;
-
-interface AuthRequest extends Request {
-  user?: any;
-}
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { TypeUserToken } from '../@types/userType';
 
 export const authenticateJWT = (
-  req: AuthRequest,
+  req: Request & { user?: TypeUserToken },
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  const authHeader = req.headers["authorization"];
-  const token =
-    authHeader && authHeader.startsWith("Bearer ")
-      ? authHeader.split(" ")[1]
-      : null;
-  // Pega o token do cabeçalho Authorization
-
-  if (token == null)
-    return res.status(401).json({ message: "Token necessário" });
-
-  try {
-    const decoded = jwt.verify(token, secret);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res
-      .status(403)
-      .json({ message: "Token inválido ou expirado", error: err });
+  const headerToken = req.headers.authorization;
+  console.log('entou aqui');
+  if (!headerToken) {
+    return res.status(401).send({ error: 'Token não informado' });
   }
+  console.log('entou aqui2');
+  const [typeToken, token] = headerToken.split(' ');
+
+  if (process.env.JWT_SECRET === undefined) {
+    return res
+      .status(500)
+      .json({ msg: 'Variável de ambiente Secret não definida' });
+  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decoded) {
+    return res.status(401).json({ msg: 'Token Inválido' });
+  }
+
+  console.log(decoded);
+
+  req.user = decoded as TypeUserToken;
+  next();
 };
