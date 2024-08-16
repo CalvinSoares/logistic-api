@@ -5,17 +5,27 @@ import { create } from 'domain';
 import { TypeOrder } from '../@types/orderType';
 import { transformToOrderDTO } from '../utils/converterDTO/transformToOrderDTO';
 import orderService from '../services/orderService';
+import { TypeRequestUser } from '../@types/userType';
 
 class OrderController {
-  async getOrders(req: Request, res: Response) {
+  async getOrders(req: TypeRequestUser, res: Response) {
+    const { user } = req;
     try {
+      if (user?.role !== 'admin') {
+        const orders = await orderService.getAllByEmail(user?.email);
+        if (!orders) {
+          return res
+            .status(404)
+            .json({ message: 'Orders not found for this user' });
+        }
+        return res.status(200).json(orders);
+      }
       const orders = await orderService.getAll();
-
       if (!orders) {
         return res.status(404).json({ message: 'Order not found' });
       }
 
-      res.status(200).json(orders);
+      return res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Error get all order', error: err });
     }
