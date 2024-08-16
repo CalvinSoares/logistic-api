@@ -9,7 +9,7 @@ import orderService from '../services/orderService';
 class OrderController {
   async getOrders(req: Request, res: Response) {
     try {
-      const orders = await orderService.getAllOrders();
+      const orders = await orderService.getAll();
 
       if (!orders) {
         return res.status(404).json({ message: 'Order not found' });
@@ -39,7 +39,7 @@ class OrderController {
   async createOrder(req: Request, res: Response) {
     const order = req.body;
     try {
-      const orderCreated = await orderService.addOrder(order);
+      const orderCreated = await orderService.add(order);
       res.status(201).json(orderCreated);
     } catch (err) {
       res.status(500).json({ message: 'Erro ao criar pedido', error: err });
@@ -50,13 +50,7 @@ class OrderController {
     const { id } = req.params;
     const order = req.body;
     try {
-      const orderUpdated = await Order.findByIdAndUpdate(
-        id,
-        { $set: order },
-        {
-          new: true,
-        },
-      );
+      const orderUpdated = await orderService.updateById(id, order);
       if (!order) {
         return res.status(404).json({ message: 'Pedido não encontrado' });
       }
@@ -69,7 +63,7 @@ class OrderController {
   async deleteOrder(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const orderDeleted = await Order.findByIdAndDelete(id);
+      const orderDeleted = await orderService.deleteById(id);
       if (!orderDeleted) {
         return res.status(404).json({ message: 'Order not found' });
       }

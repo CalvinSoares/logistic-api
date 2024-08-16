@@ -1,10 +1,10 @@
 import { TypeOrder } from '../@types/orderType';
-import { CreateOrderDTO } from '../dto/orderDto';
+import { CreateOrderDTO, OrderDTO } from '../dto/orderDto';
 import { IOrder, Order } from '../models/orderModel';
 import { transformToOrderDTO } from '../utils/converterDTO/transformToOrderDTO';
 
 class OrderService {
-  async getAllOrders() {
+  async getAll() {
     const order = (await Order.find().lean()) as TypeOrder[] | null;
     if (!order) {
       return null;
@@ -26,7 +26,7 @@ class OrderService {
     return orderDTO;
   }
 
-  async addOrder(order: CreateOrderDTO) {
+  async add(order: CreateOrderDTO) {
     const orderCreated = (await Order.create(order)) as TypeOrder | null;
 
     if (!orderCreated) {
@@ -34,6 +34,35 @@ class OrderService {
     }
     const orderDTO = transformToOrderDTO(orderCreated);
     return orderDTO;
+  }
+
+  async updateById(id: string, order: CreateOrderDTO) {
+    const orderUpdated = (await Order.findByIdAndUpdate(
+      id,
+      { $set: order },
+      {
+        new: true,
+        lean: true,
+      },
+    )) as TypeOrder | null;
+
+    if (!order) {
+      return null;
+    }
+    const orderDTO = transformToOrderDTO(orderUpdated);
+    return orderDTO;
+  }
+
+  async deleteById(id: string) {
+    const orderDeleted = (await Order.findByIdAndDelete(
+      id,
+    )) as TypeOrder | null;
+
+    if (!orderDeleted) {
+      return null;
+    }
+    const OrderDTO = transformToOrderDTO(orderDeleted);
+    return OrderDTO;
   }
 }
 
