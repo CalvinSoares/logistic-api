@@ -1,7 +1,7 @@
 import { TypeOrder } from '../../@types/orderType';
 import { OrderDTO } from '../../dto/orderDto';
 
-export const transformToUserDTO = (user: TypeOrder | null): OrderDTO => {
+export const transformToOrderDTO = (user: TypeOrder | null): OrderDTO => {
   if (!user || typeof user !== 'object') {
     throw new Error('Invalid user data');
   }

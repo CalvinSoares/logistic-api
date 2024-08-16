@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { Order } from '../models/orderModel';
 import { Console } from 'console';
 import { create } from 'domain';
+import { TypeOrder } from '../@types/orderType';
+import { transformToOrderDTO } from '../utils/converterDTO/transformToOrderDTO';
 
 class OrderController {
   async getOrders(req: Request, res: Response) {
@@ -14,11 +16,20 @@ class OrderController {
   }
 
   async getOrderById(req: Request, res: Response) {
+    const { id } = req.params;
     try {
-      const order = await Order.findById(req.params.id);
+      const order = (await Order.findById(
+        id,
+        {},
+        { lean: true },
+      )) as TypeOrder | null;
+
       if (!order) {
         return res.status(404).json({ message: 'Order not found' });
       }
+
+      const orderDTO = transformToOrderDTO(order);
+
       res.json(order);
     } catch (err) {
       res.status(500).json({ message: 'Error search order', error: err });

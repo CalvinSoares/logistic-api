@@ -19,6 +19,7 @@ class PDFService {
       });
     }
 
+    // Finalizar o PDF e retornar o stream
     doc.end();
     return doc;
   }
