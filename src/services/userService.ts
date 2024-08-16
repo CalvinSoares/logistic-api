@@ -2,6 +2,7 @@ import { TypeUser } from '../@types/userType';
 import { CreateUserDTO } from '../dto/userDto';
 import { User } from '../models/userModel';
 import { transformToUserDTO } from '../utils/converterDTO/transformToUserDTO';
+import bcrypt from 'bcrypt';
 
 class UserService {
   async getAll() {
@@ -10,6 +11,22 @@ class UserService {
       return null;
     }
     const userDTO = users.map((u) => transformToUserDTO(u));
+    return userDTO;
+  }
+
+  async add(data: CreateUserDTO) {
+    const existingUser = await this.findByEmail(data.email);
+    if (existingUser) {
+      return null;
+    }
+    const { password, ...restOfData } = data;
+    const hash = await bcrypt.hash(password, 10);
+    const userCreate = (await User.create({
+      password: hash,
+      ...restOfData,
+    })) as TypeUser | null;
+
+    const userDTO = transformToUserDTO(userCreate);
     return userDTO;
   }
 

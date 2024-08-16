@@ -2,23 +2,16 @@ import { User } from '../models/userModel';
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import userService from '../services/userService';
 
 class AuthController {
   async signUp(req: Request, res: Response) {
-    const { username, email, password, role } = req.body;
+    const user = req.body;
     try {
-      const existingUser = await User.findOne({ username });
-      if (existingUser) {
-        return res.status(409).json({ error: 'O usuário já existe' });
+      const userCreated = await userService.add(user);
+      if (!userCreated) {
+        return res.status(409).json({ error: 'O cadastro já existe' });
       }
-      const hash = await bcrypt.hash(password, 10);
-      const usuario = await User.create({
-        username,
-        email,
-        password: hash,
-        role,
-      });
-
       res.status(201).json({ message: 'User created successfully' });
     } catch (err) {
       res
