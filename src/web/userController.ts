@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { TypeRequestUser, TypeUser } from '../@types/userType';
-import { transformToUserDTO } from '../utils/transformToUserDTO';
+import { transformToUserDTO } from '../utils/converterDTO/transformToUserDTO';
 import { UserDTO } from '../dto/userDto';
 dotenv.config();
 

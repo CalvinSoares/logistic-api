@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getAllOrders } from '../services/orderController';
 
-import orderController from '../controllers/orderController';
+import orderController from '../web/orderController';
 
 const orderRouter = Router();
 //esta ok

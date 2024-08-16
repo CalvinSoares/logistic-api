@@ -1,5 +1,5 @@
-import { TypeUser } from '../@types/userType';
-import { UserDTO } from '../dto/userDto';
+import { TypeUser } from '../../@types/userType';
+import { UserDTO } from '../../dto/userDto';
 
 export const transformToUserDTO = (user: TypeUser | null): UserDTO => {
   if (!user || typeof user !== 'object') {
