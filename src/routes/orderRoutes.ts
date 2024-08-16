@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { getAllOrders } from '../services/orderController';
 
 import orderController from '../web/orderController';
 

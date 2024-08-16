@@ -4,12 +4,18 @@ import { Console } from 'console';
 import { create } from 'domain';
 import { TypeOrder } from '../@types/orderType';
 import { transformToOrderDTO } from '../utils/converterDTO/transformToOrderDTO';
+import orderService from '../services/orderService';
 
 class OrderController {
   async getOrders(req: Request, res: Response) {
     try {
-      const orders = await Order.find();
-      res.json(orders);
+      const orders = await orderService.getAllOrders();
+
+      if (!orders) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.status(200).json(orders);
     } catch (err) {
       res.status(500).json({ message: 'Error get all order', error: err });
     }
@@ -18,19 +24,13 @@ class OrderController {
   async getOrderById(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const order = (await Order.findById(
-        id,
-        {},
-        { lean: true },
-      )) as TypeOrder | null;
+      const order = await orderService.findById(id);
 
       if (!order) {
         return res.status(404).json({ message: 'Order not found' });
       }
 
-      const orderDTO = transformToOrderDTO(order);
-
-      res.json(order);
+      res.status(200).json(order);
     } catch (err) {
       res.status(500).json({ message: 'Error search order', error: err });
     }
