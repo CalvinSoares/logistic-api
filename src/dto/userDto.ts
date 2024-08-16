@@ -4,3 +4,10 @@ export type UserDTO = {
   email: string;
   role: 'admin' | 'driver' | 'customer';
 };
+
+export type CreateUserDTO = {
+  username: string;
+  email: string;
+  password: string;
+  role: 'admin' | 'driver' | 'customer';
+};
