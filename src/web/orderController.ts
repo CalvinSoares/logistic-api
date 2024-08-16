@@ -39,10 +39,7 @@ class OrderController {
   async createOrder(req: Request, res: Response) {
     const order = req.body;
     try {
-      const orderCreated = await Order.create({
-        price: parseFloat(order.price),
-        ...order,
-      });
+      const orderCreated = await orderService.addOrder(order);
       res.status(201).json(orderCreated);
     } catch (err) {
       res.status(500).json({ message: 'Erro ao criar pedido', error: err });

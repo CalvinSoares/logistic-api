@@ -1,4 +1,5 @@
 import { TypeOrder } from '../@types/orderType';
+import { CreateOrderDTO } from '../dto/orderDto';
 import { IOrder, Order } from '../models/orderModel';
 import { transformToOrderDTO } from '../utils/converterDTO/transformToOrderDTO';
 
@@ -21,9 +22,17 @@ class OrderService {
     if (!order) {
       return null;
     }
-
     const orderDTO = transformToOrderDTO(order);
+    return orderDTO;
+  }
 
+  async addOrder(order: CreateOrderDTO) {
+    const orderCreated = (await Order.create(order)) as TypeOrder | null;
+
+    if (!orderCreated) {
+      return null;
+    }
+    const orderDTO = transformToOrderDTO(orderCreated);
     return orderDTO;
   }
 }

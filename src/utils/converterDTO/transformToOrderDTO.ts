@@ -6,7 +6,7 @@ export const transformToOrderDTO = (user: TypeOrder | null): OrderDTO => {
     throw new Error('Invalid user data');
   }
   return {
-    id: user._id.toString(),
+    _id: user._id.toString(),
     status: user.status,
     userName: user.userName,
     deliveryDate: user.deliveryDate,
