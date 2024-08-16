@@ -1,19 +1,21 @@
 import { TypeOrder } from '../../@types/orderType';
 import { OrderDTO } from '../../dto/orderDto';
 
-export const transformToOrderDTO = (user: TypeOrder | null): OrderDTO => {
-  if (!user || typeof user !== 'object') {
+export const transformToOrderDTO = (order: TypeOrder | null): OrderDTO => {
+  if (!order || typeof order !== 'object') {
     throw new Error('Invalid user data');
   }
+
+  console.log('entrou aqui no trans', order);
   return {
-    _id: user._id.toString(),
-    status: user.status,
-    userName: user.userName,
-    deliveryDate: user.deliveryDate,
-    address: user.address,
-    price: user.price,
-    plano: user.plano,
-    phone: user.phone,
-    email: user.email,
+    _id: order._id,
+    status: order.status,
+    userName: order.userName,
+    deliveryDate: order.deliveryDate,
+    address: order.address,
+    price: order.price,
+    plano: order.plano,
+    phone: order.phone,
+    email: order.email,
   };
 };

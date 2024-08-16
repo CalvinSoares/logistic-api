@@ -12,6 +12,29 @@ class OrderService {
     return order.map((o) => transformToOrderDTO(o));
   }
 
+  async findByUserName(userName: string) {
+    const order = (await Order.findOne({
+      userName,
+    }).lean()) as TypeOrder | null;
+    if (!order) {
+      return null;
+    }
+    const orderDTO = transformToOrderDTO(order);
+    return orderDTO;
+  }
+
+  async findByEmail(email: string) {
+    console.log(email);
+    const order = (await Order.findOne({
+      email,
+    }).lean()) as TypeOrder | null;
+    if (!order) {
+      return null;
+    }
+    const orderDTO = transformToOrderDTO(order);
+    return orderDTO;
+  }
+
   async findById(id: string) {
     const order = (await Order.findById(
       id,

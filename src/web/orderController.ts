@@ -36,6 +36,38 @@ class OrderController {
     }
   }
 
+  async getOrderByUser(req: Request, res: Response) {
+    const { userName } = req.params;
+    try {
+      const order = await orderService.findByUserName(userName);
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.status(200).json(order);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: 'Error search order', error: (err as Error).message });
+    }
+  }
+
+  async getOrderByEmail(req: Request, res: Response) {
+    const { email } = req.params;
+    try {
+      const order = await orderService.findByEmail(email);
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.status(200).json(order);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: 'Error search order', error: (err as Error).message });
+    }
+  }
+
   async createOrder(req: Request, res: Response) {
     const order = req.body;
     try {

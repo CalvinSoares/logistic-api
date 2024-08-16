@@ -1,16 +1,16 @@
+import orderService from '../services/orderService';
 import PDFService from '../utils/pdf/PDFService';
 import { Request, Response } from 'express';
 class PdfController {
   async createPDF(req: Request, res: Response) {
     const { idOrder } = req.params;
-
-    const data = {
-      title: 'Hello, PDFKit!',
-      content: 'This is a sample PDF generated with PDFKit.',
-    };
-
     try {
-      const pdf = await PDFService.generatePDFStream(data);
+      const order = await orderService.findById(idOrder);
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+
+      const pdf = await PDFService.generatePDForder(order);
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', 'attachment; filename="output.pdf"');
