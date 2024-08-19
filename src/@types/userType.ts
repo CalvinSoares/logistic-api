@@ -14,4 +14,4 @@ export type TypeUser = {
   role: 'admin' | 'driver' | 'customer';
 };
 
-export type TypeRequestUser = Request & { user: TypeUserToken };
+export type TypeRequestUser = Request & { user?: TypeUserToken };
