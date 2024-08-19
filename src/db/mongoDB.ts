@@ -6,7 +6,7 @@ dotenv.config();
 
 mongoose.set('strictQuery', true);
 
-const url = `mongodb://${process.env.ADDRESS_DATA_BASE}:${process.env.PORT_URL}/delivery`;
+const url = `${process.env.MONGO_URL_DB}`;
 
 async function startDB() {
   mongoose.set('strictQuery', true);
