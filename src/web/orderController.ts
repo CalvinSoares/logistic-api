@@ -80,6 +80,7 @@ class OrderController {
 
   async createOrder(req: Request, res: Response) {
     const order = req.body;
+    console.log(order);
     try {
       const orderCreated = await orderService.add(order);
       res.status(201).json(orderCreated);

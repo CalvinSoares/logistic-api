@@ -14,7 +14,7 @@ export interface IOrder extends Document {
 const orderSchema = new Schema<IOrder>({
   status: { type: String, required: true },
   userName: { type: String, required: true },
-  deliveryDate: { type: Date, required: true },
+  deliveryDate: { type: Date },
   address: { type: String, required: true },
   price: { type: Number, required: true },
   plano: { type: String, required: true },
