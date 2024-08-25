@@ -40,10 +40,41 @@ class MercadoLivreController {
     });
 
     if (responseValidToken.status !== 200) {
+      const data = {
+        grant_type: 'refresh_token',
+        client_id: process.env.ID_APPLICATION_ML,
+        client_secret: process.env.SECRET_ML,
+        refresh_token: user.refreshToken,
+      };
+      const responseMLRefreshToken = await axios.post(
+        'https://api.mercadolibre.com/oauth/token',
+        data,
+        {
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/x-www-form-urlencoded',
+          },
+        },
+      );
+      if (responseMLRefreshToken.status === 200) {
+        const newUserToken = await TokenUsers.findOneAndUpdate(
+          {
+            email: userToken?.email,
+          },
+          {
+            token: responseMLRefreshToken.data.access_token,
+            refreshToken: responseMLRefreshToken.data.refresh_token,
+          },
+          { new: true },
+        );
+        return res.status(200).json({ message: 'refresh token generated' });
+      }
+    }
+
+    if (responseValidToken.status !== 200) {
       return res.status(401).json({ message: 'token mercado livre inválido' });
     }
     res.status(200).json({ message: 'usuario possue token válido' });
-
     try {
     } catch (err) {
       res.status(500).send({
@@ -183,7 +214,7 @@ class MercadoLivreController {
       redirect_uri: process.env.URL_REDIRECT,
     };
 
-    const responseML = await axios.post(
+    const responseMLRefreshToken = await axios.post(
       'https://api.mercadolibre.com/oauth/token',
       data,
       {
@@ -193,7 +224,7 @@ class MercadoLivreController {
         },
       },
     );
-    if (responseML.status !== 200) {
+    if (responseMLRefreshToken.status !== 200) {
       res.status(400).json({ message: 'ocorreu um erro ao gerar token' });
     }
     const userToken = await TokenUsers.findOneAndUpdate(
@@ -202,8 +233,8 @@ class MercadoLivreController {
       },
       {
         email: emailSession,
-        token: responseML.data.access_token,
-        refreshToken: responseML.data.refresh_token,
+        token: responseMLRefreshToken.data.access_token,
+        refreshToken: responseMLRefreshToken.data.refresh_token,
       },
       { upsert: true, new: true },
     );

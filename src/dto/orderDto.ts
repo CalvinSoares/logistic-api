@@ -8,6 +8,7 @@ export type OrderDTO = {
   plano: string;
   phone: string;
   email: string;
+  driver: string;
 };
 
 export type CreateOrderDTO = {
@@ -19,4 +20,5 @@ export type CreateOrderDTO = {
   plano: string;
   phone: string;
   email: string;
+  driver: string;
 };

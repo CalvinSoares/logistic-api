@@ -17,5 +17,6 @@ export const transformToOrderDTO = (order: TypeOrder | null): OrderDTO => {
     plano: order.plano,
     phone: order.phone,
     email: order.email,
+    driver: order.driver,
   };
 };

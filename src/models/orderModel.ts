@@ -9,6 +9,7 @@ export interface IOrder extends Document {
   plano: string;
   phone: string;
   email: string;
+  driver: string;
 }
 
 const orderSchema = new Schema<IOrder>({
@@ -20,6 +21,7 @@ const orderSchema = new Schema<IOrder>({
   plano: { type: String, required: true },
   phone: { type: String, required: true },
   email: { type: String, required: true },
+  driver: { type: String, required: true },
 });
 
 export const Order = model<IOrder>('Order', orderSchema);

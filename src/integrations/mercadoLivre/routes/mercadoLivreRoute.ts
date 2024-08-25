@@ -32,6 +32,10 @@ routerML.get(
   authenticateJWT,
   mercadoLivreController.getOrders,
 );
-routerML.get('/api-ml/logout/', authenticateJWT, mercadoLivreController.logout);
+routerML.delete(
+  '/api-ml/logout/',
+  authenticateJWT,
+  mercadoLivreController.logout,
+);
 
 export default routerML;

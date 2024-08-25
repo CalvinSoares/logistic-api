@@ -8,7 +8,7 @@ const sessionOptions: SessionOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Use HTTPS em produção
     sameSite: 'strict',
-    maxAge: 5 * 60 * 1000, //5 minutos,
+    maxAge: 5 * 60 * 1000,
   },
 };
 
