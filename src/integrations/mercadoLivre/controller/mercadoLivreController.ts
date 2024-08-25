@@ -165,6 +165,7 @@ class MercadoLivreController {
           },
           params: {
             seller: responseDataUser.data.id,
+            sort: 'date_desc',
           },
           validateStatus: function (status) {
             return status >= 200 && status < 600;
