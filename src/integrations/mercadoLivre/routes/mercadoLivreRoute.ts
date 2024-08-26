@@ -38,8 +38,7 @@ routerML.delete(
   mercadoLivreController.logout,
 );
 routerML.get(
-  '/api-ml/pdf/orders/:idOrder',
-  authenticateJWT,
+  '/api-ml/pdf/orders/:idOrder/:emailUser',
   mercadoLivreController.pdfOrder,
 );
 

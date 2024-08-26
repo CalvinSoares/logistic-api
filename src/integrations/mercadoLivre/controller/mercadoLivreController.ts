@@ -261,11 +261,10 @@ class MercadoLivreController {
   }
 
   async pdfOrder(req: RequestSession, res: Response) {
-    const user = req.user;
-    const { idOrder } = req.params;
+    const { idOrder, emailUser } = req.params;
 
     const tokenUser = (await TokenUsers.findOne(
-      { email: user?.email },
+      { email: emailUser },
       {},
       { lean: true },
     )) as TypeTokenRefreshCode | null;
