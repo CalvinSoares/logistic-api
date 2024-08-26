@@ -9,6 +9,7 @@ import {
   urlCreateUser,
   urlShipments,
 } from '../config/urls';
+import PDFMercadoLivre from '../../../utils/pdf/PDFMercadoLivre';
 //--------------------------------------------------------------------------------------------------------------------------------------------
 class MercadoLivreController {
   async tokenIsValid(req: RequestSession, res: Response) {
@@ -257,6 +258,51 @@ class MercadoLivreController {
         error: (err as Error).message,
       });
     }
+  }
+
+  async pdfOrder(req: RequestSession, res: Response) {
+    const user = req.user;
+    const { idOrder } = req.params;
+
+    const tokenUser = (await TokenUsers.findOne(
+      { email: user?.email },
+      {},
+      { lean: true },
+    )) as TypeTokenRefreshCode | null;
+
+    const responseDataUser = await axios.get(urlAccountMe, {
+      headers: {
+        Authorization: `Bearer ${tokenUser?.token}`,
+      },
+      validateStatus: function (status) {
+        return status >= 200 && status < 600;
+      },
+    });
+
+    const response: any = await axios.get(
+      'https://api.mercadolibre.com/orders/search',
+      {
+        headers: {
+          Authorization: `Bearer ${tokenUser?.token}`,
+        },
+        params: {
+          seller: responseDataUser.data.id,
+          q: idOrder,
+        },
+        validateStatus: function (status) {
+          return status >= 200 && status < 600;
+        },
+      },
+    );
+
+    // console.log(response.data);
+    const pdf = await PDFMercadoLivre.generatePDForder(
+      response.data.results[0],
+    );
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="output.pdf"');
+
+    pdf.pipe(res);
   }
 }
 

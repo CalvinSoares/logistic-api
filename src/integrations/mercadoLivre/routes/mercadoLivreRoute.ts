@@ -37,5 +37,10 @@ routerML.delete(
   authenticateJWT,
   mercadoLivreController.logout,
 );
+routerML.get(
+  '/api-ml/pdf/orders/:idOrder',
+  authenticateJWT,
+  mercadoLivreController.pdfOrder,
+);
 
 export default routerML;
