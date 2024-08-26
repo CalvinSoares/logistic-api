@@ -8,4 +8,5 @@ export type TypeOrder = {
   plano: string;
   phone: string;
   email: string;
+  driver: string;
 };
