@@ -53,6 +53,8 @@ class PDFMercadoLivre {
     const dateObject = new Date(dateCreated);
     const dateOnly = dateObject.toLocaleDateString('pt-BR');
     doc.fontSize(12).text(`Data da criação do pedido: ${dateOnly}`, 50, 200);
+    // doc.fontSize(12).text(`Método de envio: ${data.tracking_method}`, 50, 220);
+
     doc.fontSize(15).text(`Itens do pedido: `, 50, 240);
     data.order_items.map((produtos: any) => {
       console.log('valor do itens: ', produtos);
@@ -60,6 +62,7 @@ class PDFMercadoLivre {
       doc.fontSize(12).text(`Quantidade: ${produtos.quantity}`, 60);
       doc.fontSize(12).text(`preço unitário: ${produtos.unit_price}`, 60);
       doc.fontSize(12).text(`preço total: ${produtos.full_unit_price}`, 60);
+      doc.fontSize(12).text(`-------------------------`, 60);
     });
     doc.end();
     return doc;
