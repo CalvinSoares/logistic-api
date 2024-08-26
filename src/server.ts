@@ -1,5 +1,5 @@
-import { startDB } from './db/mongoDB.ts';
-import Loaders from './db/Loaders.ts';
+import { startDB } from './db/mongoDB';
+import Loaders from './db/Loaders';
 
 const dbStarters = {
   mongoDB: startDB,
