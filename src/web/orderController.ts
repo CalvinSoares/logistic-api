@@ -10,8 +10,9 @@ import { TypeRequestUser } from '../@types/userType';
 class OrderController {
   async getOrders(req: TypeRequestUser, res: Response) {
     const { user } = req;
+    const allowedRoles = ['admin', 'driver'];
     try {
-      if (user?.role !== 'admin') {
+      if (!allowedRoles.includes(user!.role)) {
         const orders = await orderService.getAllByEmail(user?.email);
         if (!orders) {
           return res
